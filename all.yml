@@ -1,0 +1,69 @@
+---
+- hosts: all
+  become_method: sudo
+  gather_facts: yes
+  vars:
+    docker_version: "18.06.1~ce~3-0~debian"
+    docker_group: docker
+    kubeadm_version: 1.13.2-00
+    kubelet_version: 1.13.2-00
+  tasks:
+    - name: Install prerequisites
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - htop
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+        - software-properties-common
+        - git
+      become: yes
+
+    - name: Add Docker GPG key
+      apt_key: url=https://download.docker.com/linux/debian/gpg
+      become: yes
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+      become: yes
+
+    - name: Install Docker
+      apt: name=docker-ce={{ docker_version }}
+      become: yes
+
+    - name: Ensure group "docker" exists
+      group:
+        name: "{{ docker_group }}"
+        state: present
+      become: yes
+
+    - name: Add current user {{ ansible_ssh_user }} to docker group
+      user:
+        name: "{{ ansible_ssh_user }}"
+        groups: "{{ docker_group }}"
+        append: yes
+      become: yes
+
+    - name: Ensure docker service running
+      service:
+        name: docker
+        state: started
+
+    - name: Add GC GPG key
+      apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      become: yes
+
+    - name: Add kubernetes APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://apt.kubernetes.io/ kubernetes-xenial main
+        filename: kubernetes.list
+      become: yes
+
+    - name: Install kubernetes
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - kubelet={{ kubelet_version }}
+        - kubeadm={{ kubeadm_version }}
+      become: yes

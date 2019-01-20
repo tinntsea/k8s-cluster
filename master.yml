@@ -1,0 +1,39 @@
+---
+- hosts: masters
+  become_method: sudo
+  gather_facts: yes
+  vars:
+    kubectl_version: 1.13.2-00
+  tasks:
+    - name: Install kubectl
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - kubectl={{ kubectl_version }}
+      become: yes
+
+    - name: Check if cluster already initialized
+      shell: kubeadm token create --print-join-command
+      become: yes
+      ignore_errors: yes
+      register: join_command_raw
+
+    - name: Initialize the cluster
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16
+      become: yes
+      when: join_command_raw.rc != 0
+
+    - name: Create .kube directory
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: Copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/{{ ansible_user_id }}/.kube/config
+        remote_src: yes
+      become: yes
+
+    - name: Apply kube-flannel
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
