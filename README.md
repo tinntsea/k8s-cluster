@@ -1,8 +1,43 @@
-# k8s-cluster
+# Kubernetes Cluster using Kubeadm, Ansible, and Vagrant
 
-To provision k8s master node, run:
+## Creating kubernetes cluster
+
+Step 1: Bring vagrant nodes up
+
 ```
-ansible-playbook -i dev -c local -u tin.nguyen all.yml
-ansible-playbook -i dev -c local -u tin.nguyen master.yml
-ansible-playbook -i dev -c local -u tin.nguyen worker.yml
+vagrant up
+```
+
+Step 2: Install prerequisites for all nodes
+
+```
+ansible-playbook -i dev all.yml
+```
+
+Step 3: Install master node
+
+```
+ansible-playbook -i dev master.yml
+```
+
+Step 2: Install worker nodes
+
+```
+ansible-playbook -i dev worker.yml
+```
+
+## Verifying kubenetes cluster
+
+To check if cluster is up:
+```
+kubectl get pods -n kube-system
+```
+```
+vagrant@master:~$ kubectl get nodes
+NAME     STATUS     ROLES    AGE   VERSION
+master   NotReady   master   64s   v1.13.2
+```
+
+```
+kubectl get pods -n kube-system
 ```
