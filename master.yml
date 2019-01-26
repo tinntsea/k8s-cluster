@@ -11,7 +11,7 @@
         - kubectl={{ kubectl_version }}
       become: yes
 
-    - name: Check if cluster already initialized
+    - name: Check if cluster has been initialized
       shell: kubeadm token create --print-join-command
       become: yes
       ignore_errors: yes
@@ -36,4 +36,4 @@
       become: yes
 
     - name: Apply kube-flannel
-      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
