@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
   config.vm.provision :shell, :inline => <<-SCRIPT
     set -e
-    apt update && apt install -y swapspace
+    apt-get update && apt-get install -y swapspace
 
     echo '#{private_key}' > /home/vagrant/.ssh/id_rsa
     chmod 600 /home/vagrant/.ssh/id_rsa
@@ -31,15 +31,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "master" do |master|
     master.vm.box = "debian/stretch64"
-    master.vm.network "private_network", ip: "172.31.1.101"
-    # config.vm.network "public_network"
+    # config.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
+    master.vm.network "private_network", ip: "10.1.100.100", :netmask => "255.255.0.0"
     master.vm.hostname = "master"
-
-    # master.vm.provider "virtualbox" do |v|
-    #   v.memory = 2048
-    #   v.cpus = 2
-    #   v.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
-    # end
 
     master.ssh.insert_key = false
     master.ssh.keys_only = false
@@ -50,15 +44,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "worker1" do |worker1|
     worker1.vm.box = "debian/stretch64"
-    worker1.vm.network "private_network", ip: "172.31.1.102"
-    # config.vm.network "public_network"
+    # config.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
+    worker1.vm.network "private_network", ip: "10.1.100.101", :netmask => "255.255.0.0"
     worker1.vm.hostname = "worker1"
-
-    # worker1.vm.provider "virtualbox" do |v|
-    #   v.memory = 2048
-    #   v.cpus = 2
-    #   v.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
-    # end
 
     worker1.ssh.insert_key = false
     worker1.ssh.keys_only = false

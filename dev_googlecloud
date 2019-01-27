@@ -1,0 +1,9 @@
+[masters]
+master ansible_host=35.247.185.12
+
+[workers]
+worker1 ansible_host=35.247.185.13
+worker2 ansible_host=35.240.221.189
+
+[all:vars]
+ansible_connection=ssh
