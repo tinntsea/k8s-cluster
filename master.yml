@@ -18,9 +18,14 @@
       register: join_command_raw
 
     - name: Initialize the cluster
-      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.1.100.100
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16
       become: yes
-      when: join_command_raw.rc != 0
+      when: join_command_raw.rc != 0 and (infra is undefined or infra != "vagrant")
+
+    - name: Initialize the cluster on vagrant
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address={{ apiserver_advertise_address }}
+      become: yes
+      when: join_command_raw.rc != 0 and infra is defined and infra == "vagrant"
 
     - name: Create .kube directory
       file:

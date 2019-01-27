@@ -3,6 +3,7 @@
   become_method: sudo
   gather_facts: yes
   tasks:
+    # https://github.com/kubernetes/kubeadm/issues/203
     - name: Update /etc/default/kubelet
       shell: 'echo "KUBELET_EXTRA_ARGS=--node-ip={{ ansible_host }}" > /etc/default/kubelet'
       become: yes

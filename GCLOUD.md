@@ -26,6 +26,10 @@ ansible-playbook -i dev_googlecloud -u tin.nguyen worker.yml
 
 To check if cluster is up:
 ```
+ssh vagrant@10.1.100.100
+```
+
+```
 kubectl get pods -all-namespaces
 
 vagrant@master:~$ kubectl get pods --all-namespaces
