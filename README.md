@@ -8,13 +8,12 @@ k8s-cluster helps developers/devops engineers to create and run their own kubern
 
 ## Creating kubernetes cluster
 
-#### Option 1:
-Run a shell script to bring up the cluster
+#### Option 1: Run a shell script to bring up the cluster
 ```
-./up/sh
+./up.sh
 ```
 
-#### Option 2:
+#### Option 2: Step by step
 Step 1: Bring vagrant VMs up
 
 ```
