@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become_method: sudo
+  gather_facts: yes
+  tasks:
+    - name: Update /etc/default/kubelet
+      shell: 'echo "KUBELET_EXTRA_ARGS=--node-ip={{ ansible_host }}" > /etc/default/kubelet'
+      become: yes
+
+    - name: Reload daemon
+      shell: 'systemctl daemon-reload'
+      become: yes
+
+    - name: Restart kubelet
+      shell: 'systemctl restart kubelet'
+      become: yes

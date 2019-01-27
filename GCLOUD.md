@@ -1,30 +1,25 @@
-# Kubernetes Cluster using Kubeadm, Ansible, and Vagrant
+# Kubernetes Cluster using Kubeadm, Ansible, and Google Cloud
 
 ## Creating kubernetes cluster
 
-Step 1: Bring vagrant nodes up
-
-```
-vagrant up
-```
+Step 1: Prepare environment on your google cloud
 
 Step 2: Install prerequisites for all nodes
 
 ```
-ansible-playbook -i dev_vagrant all.yml
-ansible-playbook -i dev_vagrant vagrant_fix_kube_internal_ip.yml
+ansible-playbook -i dev_googlecloud -u tin.nguyen all.yml
 ```
 
 Step 3: Install master node
 
 ```
-ansible-playbook -i dev_vagrant master.yml
+ansible-playbook -i dev_googlecloud -u tin.nguyen master.yml
 ```
 
 Step 2: Install worker nodes
 
 ```
-ansible-playbook -i dev_vagrant worker.yml
+ansible-playbook -i dev_googlecloud -u tin.nguyen worker.yml
 ```
 
 ## Verifying kubernetes cluster
