@@ -1,14 +1,20 @@
 # Kubernetes Cluster using Kubeadm, Ansible, and Vagrant
+k8s-cluster helps developers/devops engineers to create and run their own kubernetes cluster (single master + multiple worker nodes) on their laptops.
+
+## Prerequisites
+⋅⋅* [Vagrant](https://www.vagrantup.com/)
+⋅⋅* [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
+..* [Ansible](https://www.ansible.com/)
 
 ## Creating kubernetes cluster
 
-Step 1: Bring vagrant nodes up
+Step 1: Bring vagrant VMs up
 
 ```
 vagrant up
 ```
 
-Step 2: Install prerequisites for all nodes
+Step 2: Install prerequisites for all VMs
 
 ```
 ansible-playbook -i dev_vagrant all.yml
@@ -30,6 +36,10 @@ ansible-playbook -i dev_vagrant worker.yml
 ## Verifying kubernetes cluster
 
 To check if cluster is up:
+```
+ssh vagrant@10.1.100.100
+```
+
 ```
 kubectl get pods -all-namespaces
 
