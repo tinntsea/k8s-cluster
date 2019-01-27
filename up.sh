@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+export ANSIBLE_HOST_KEY_CHECKING="False"
+
 echo "Bring up vagrant VMs..."
 vagrant up
 
