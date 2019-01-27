@@ -2,12 +2,19 @@
 k8s-cluster helps developers/devops engineers to create and run their own kubernetes cluster (single master + multiple worker nodes) on their laptops.
 
 ## Prerequisites
-⋅⋅* [Vagrant](https://www.vagrantup.com/)
-⋅⋅* [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
-..* [Ansible](https://www.ansible.com/)
+- [Vagrant](https://www.vagrantup.com/)
+- [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
+- [Ansible](https://www.ansible.com/)
 
 ## Creating kubernetes cluster
 
+#### Option 1:
+Run a shell script to bring up the cluster
+```
+./up/sh
+```
+
+#### Option 2:
 Step 1: Bring vagrant VMs up
 
 ```
@@ -27,7 +34,7 @@ Step 3: Install master node
 ansible-playbook -i dev_vagrant master.yml
 ```
 
-Step 2: Install worker nodes
+Step 4: Install worker nodes
 
 ```
 ansible-playbook -i dev_vagrant worker.yml
