@@ -19,9 +19,13 @@ Vagrant.configure("2") do |config|
 
     echo '#{public_key}' > /home/vagrant/.ssh/authorized_keys
     chmod 600 /home/vagrant/.ssh/authorized_keys
-  SCRIPT
 
-  config.vm.provision "shell", inline: "swapoff -a", run: "always"
+    # kubelet requires swap off
+    swapoff -a
+
+    # keep swap off after reboot
+    sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+  SCRIPT
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 2048
@@ -31,7 +35,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "master" do |master|
     master.vm.box = "debian/stretch64"
-    # config.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
+    # master.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
     master.vm.network "private_network", ip: "10.1.100.100", :netmask => "255.255.0.0"
     master.vm.hostname = "master"
 
@@ -44,7 +48,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "worker1" do |worker1|
     worker1.vm.box = "debian/stretch64"
-    # config.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
+    # worker1.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
     worker1.vm.network "private_network", ip: "10.1.100.101", :netmask => "255.255.0.0"
     worker1.vm.hostname = "worker1"
 
@@ -53,5 +57,18 @@ Vagrant.configure("2") do |config|
     worker1.ssh.forward_agent = true
     worker1.ssh.guest_port = 22
     worker1.ssh.private_key_path = [private_key_path,insecure_key_path]
+  end
+
+  config.vm.define "worker2" do |worker2|
+    worker2.vm.box = "debian/stretch64"
+    # worker2.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
+    worker2.vm.network "private_network", ip: "10.1.100.102", :netmask => "255.255.0.0"
+    worker2.vm.hostname = "worker2"
+
+    worker2.ssh.insert_key = false
+    worker2.ssh.keys_only = false
+    worker2.ssh.forward_agent = true
+    worker2.ssh.guest_port = 22
+    worker2.ssh.private_key_path = [private_key_path,insecure_key_path]
   end
 end
